@@ -26,3 +26,5 @@ steps:
     SonarQube: 'sonar-azuredevops-token'
     scannerMode: 'CLI'
     configMode: 'file'
+
+- task: SonarQubeAnalyze@4
