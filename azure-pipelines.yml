@@ -28,3 +28,7 @@ steps:
     configMode: 'file'
 
 - task: SonarQubeAnalyze@4
+
+- task: sonar-buildbreaker@8
+  inputs:
+    SonarQube: 'sonar-azuredevops-token'
