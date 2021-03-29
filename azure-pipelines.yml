@@ -43,7 +43,7 @@ stages:
      dependsOn: Sonar
      condition: failed()
      pool:
-      vmImage: windows10
+      vmImage: 'windows-latest'
      steps:
      - task: SendEmail@1
        inputs:
