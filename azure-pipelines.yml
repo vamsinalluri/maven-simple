@@ -56,6 +56,6 @@ stages:
           BodyAsHtml: true
           AddAttachment: false
           SmtpServer: 'smtp.gmail.com'
-          SmtpPort: '465'
+          SmtpPort: '587'
           SmtpUsername: 'vamsinalluri93@gmail.com'
           SmtpPassword: 'M@hesh09'
