@@ -42,6 +42,8 @@ stages:
    - job: Mail
      dependsOn: Sonar
      condition: failed()
+     pool:
+      vmImage: windows10
      steps:
      - task: SendEmail@1
        inputs:
