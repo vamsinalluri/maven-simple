@@ -9,26 +9,51 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- task: Maven@3
-  inputs:
-    mavenPomFile: 'pom.xml'
-    goals: 'clean install'
-    publishJUnitResults: true
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    javaHomeOption: 'JDKVersion'
-    mavenVersionOption: 'Default'
-    mavenAuthenticateFeed: false
-    effectivePomSkip: false
-    sonarQubeRunAnalysis: false
-- task: SonarQubePrepare@4
-  inputs:
-    SonarQube: 'sonar-azuredevops-token'
-    scannerMode: 'CLI'
-    configMode: 'file'
+stages:
+ - stage: MavenBuild
+   jobs:
+   - job: Maven
+     steps:
+      - task: Maven@3
+        inputs:
+          mavenPomFile: 'pom.xml'
+          goals: 'clean install'
+          publishJUnitResults: true
+          testResultsFiles: '**/surefire-reports/TEST-*.xml'
+          javaHomeOption: 'JDKVersion'
+          mavenVersionOption: 'Default'
+          mavenAuthenticateFeed: false
+          effectivePomSkip: false
+          sonarQubeRunAnalysis: false
+   -  job: Sonar
+      steps:
+      - task: SonarQubePrepare@4
+        inputs:
+          SonarQube: 'sonar-azuredevops-token'
+          scannerMode: 'CLI'
+          configMode: 'file'
 
-- task: SonarQubeAnalyze@4
+      - task: SonarQubeAnalyze@4
 
-- task: sonar-buildbreaker@8
-  inputs:
-    SonarQube: 'sonar-azuredevops-token'
+      - task: sonar-buildbreaker@8
+        inputs:
+          SonarQube: 'sonar-azuredevops-token'
+
+   - job: Mail
+     dependsOn: Sonar
+     condition: failed()
+     steps:
+     - task: SendEmail@1
+       inputs:
+          To: 'vamsinalluri93@gmail.com'
+          CC: 'vamsinalluri93@gmail.com'
+          BCC: 'vamsinalluri93@gmail.com'
+          From: 'vamsinalluri93@gmail.com'
+          Subject: 'Mail Subject AzureDevOps'
+          Body: 'Mail Body AzureDevOps'
+          BodyAsHtml: true
+          AddAttachment: false
+          SmtpServer: 'smtp.gmail.com'
+          SmtpPort: '465'
+          SmtpUsername: 'vamsinalluri93@gmail.com'
+          SmtpPassword: 'M@hesh09'
